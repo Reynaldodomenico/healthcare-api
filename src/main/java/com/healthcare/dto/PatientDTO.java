@@ -1,39 +1,15 @@
-package com.healthcare.model;
+package com.healthcare.dto;
 
-import jakarta.persistence.*;
-
-@Entity
-@Table(name = "patients")
-public class Patient {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class PatientDTO {
 
     private String name;
     private Integer age;
     private String gender;
     private String email;
     private String phoneNumber;
-
-    @Column(length = 1000)
     private String medicalHistory;
 
-    public Patient() {}
-
-    public Patient(String name, Integer age, String gender,
-                   String email, String phoneNumber, String medicalHistory) {
-        this.name = name;
-        this.age = age;
-        this.gender = gender;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-        this.medicalHistory = medicalHistory;
-    }
-
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-
+    // Getters & setters
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
 

@@ -1,5 +1,6 @@
 package com.healthcare.service;
 
+import com.healthcare.dto.PatientDTO;
 import com.healthcare.model.Patient;
 import com.healthcare.repository.PatientRepository;
 import org.springframework.stereotype.Service;
@@ -40,6 +41,18 @@ public class PatientService {
 
         return patientRepository.save(existing);
     }
+
+    public Patient mapDtoToEntity(PatientDTO dto) {
+        Patient patient = new Patient();
+        patient.setName(dto.getName());
+        patient.setAge(dto.getAge());
+        patient.setGender(dto.getGender());
+        patient.setEmail(dto.getEmail());
+        patient.setPhoneNumber(dto.getPhoneNumber());
+        patient.setMedicalHistory(dto.getMedicalHistory());
+        return patient;
+    }
+
 
     public void deletePatient(Long id) {
         patientRepository.deleteById(id);

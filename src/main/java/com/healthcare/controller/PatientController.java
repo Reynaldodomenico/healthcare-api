@@ -1,5 +1,6 @@
 package com.healthcare.controller;
 
+import com.healthcare.dto.PatientDTO;
 import com.healthcare.model.Patient;
 import com.healthcare.service.PatientService;
 import org.springframework.http.HttpStatus;
@@ -19,7 +20,8 @@ public class PatientController {
     }
 
     @PostMapping
-    public ResponseEntity<Patient> createPatient(@RequestBody Patient patient) {
+    public ResponseEntity<Patient> createPatient(@RequestBody PatientDTO dto) {
+        Patient patient = patientService.mapDtoToEntity(dto);
         Patient savedPatient = patientService.createPatient(patient);
         return new ResponseEntity<>(savedPatient, HttpStatus.CREATED);
     }
