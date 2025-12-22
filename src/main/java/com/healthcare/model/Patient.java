@@ -1,36 +1,46 @@
 package com.healthcare.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
-@Table(name = "patients")
+@Table(
+        name = "patients",
+        uniqueConstraints = @UniqueConstraint(columnNames = "email")
+)
 public class Patient {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String name;
+
     private Integer age;
     private String gender;
+
+    @Column(nullable = false, unique = true)
     private String email;
+
     private String phoneNumber;
 
     @Column(length = 1000)
     private String medicalHistory;
 
+    @OneToMany(
+            mappedBy = "patient",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    @JsonIgnore
+    private List<Appointment> appointments;
+
     public Patient() {}
 
-    public Patient(String name, Integer age, String gender,
-                   String email, String phoneNumber, String medicalHistory) {
-        this.name = name;
-        this.age = age;
-        this.gender = gender;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-        this.medicalHistory = medicalHistory;
-    }
-
+    // Getters & Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -47,8 +57,17 @@ public class Patient {
     public void setEmail(String email) { this.email = email; }
 
     public String getPhoneNumber() { return phoneNumber; }
-    public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
 
     public String getMedicalHistory() { return medicalHistory; }
-    public void setMedicalHistory(String medicalHistory) { this.medicalHistory = medicalHistory; }
+    public void setMedicalHistory(String medicalHistory) {
+        this.medicalHistory = medicalHistory;
+    }
+
+    public List<Appointment> getAppointments() { return appointments; }
+    public void setAppointments(List<Appointment> appointments) {
+        this.appointments = appointments;
+    }
 }
