@@ -1,10 +1,24 @@
 package com.healthcare.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
 
+@Setter
+@Getter
 @Entity
-@Table(name = "appointments")
+@Table(
+        name = "appointments",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = {"doctor_id", "appointment_time"})
+        },
+        indexes = {
+                @Index(name = "idx_doctor_id", columnList = "doctor_id"),
+                @Index(name = "idx_patient_id", columnList = "patient_id")
+        }
+)
 public class Appointment {
 
     @Id
@@ -14,36 +28,14 @@ public class Appointment {
     @Column(nullable = false)
     private LocalDateTime appointmentTime;
 
-    @Column(nullable = false)
-    private String patientName;
-
-    @Column(nullable = false)
-    private String patientEmail;
-
-    // Many appointments belong to one doctor
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "doctor_id", nullable = false)
     private Doctor doctor;
 
-    // Constructors
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "patient_id", nullable = false)
+    private Patient patient;
+
     public Appointment() {}
 
-    public Appointment(LocalDateTime appointmentTime, String patientName, String patientEmail, Doctor doctor) {
-        this.appointmentTime = appointmentTime;
-        this.patientName = patientName;
-        this.patientEmail = patientEmail;
-        this.doctor = doctor;
-    }
-
-    // Getters & Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-    public LocalDateTime getAppointmentTime() { return appointmentTime; }
-    public void setAppointmentTime(LocalDateTime appointmentTime) { this.appointmentTime = appointmentTime; }
-    public String getPatientName() { return patientName; }
-    public void setPatientName(String patientName) { this.patientName = patientName; }
-    public String getPatientEmail() { return patientEmail; }
-    public void setPatientEmail(String patientEmail) { this.patientEmail = patientEmail; }
-    public Doctor getDoctor() { return doctor; }
-    public void setDoctor(Doctor doctor) { this.doctor = doctor; }
 }
