@@ -1,7 +1,10 @@
 package com.healthcare.controller;
 
-import com.healthcare.model.Doctor;
+import com.healthcare.dto.DoctorRequestDTO;
+import com.healthcare.dto.DoctorResponseDTO;
 import com.healthcare.service.DoctorService;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,28 +21,27 @@ public class DoctorController {
     }
 
     @PostMapping
-    public Doctor createDoctor(@RequestBody Doctor doctor) {
-        return doctorService.createDoctor(doctor);
+    public DoctorResponseDTO createDoctor(@RequestBody @Valid DoctorRequestDTO dto) {
+        return doctorService.createDoctor(dto);
     }
 
     @GetMapping
-    public List<Doctor> getAllDoctors() {
+    public List<DoctorResponseDTO> getAllDoctors() {
         return doctorService.getAllDoctors();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Doctor> getDoctorById(@PathVariable Long id) {
-        return doctorService.getDoctorById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<DoctorResponseDTO> getDoctorById(@PathVariable Long id) {
+        return ResponseEntity.ok(doctorService.getDoctorById(id));
     }
 
     @PutMapping("/{id}")
-    public Doctor updateDoctor(@PathVariable Long id, @RequestBody Doctor doctor) {
-        return doctorService.updateDoctor(id, doctor);
+    public DoctorResponseDTO updateDoctor(@PathVariable Long id, @RequestBody DoctorRequestDTO dto) {
+        return doctorService.updateDoctor(id, dto);
     }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteDoctor(@PathVariable Long id) {
         doctorService.deleteDoctor(id);
     }

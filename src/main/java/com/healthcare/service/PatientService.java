@@ -1,6 +1,7 @@
 package com.healthcare.service;
 
 import com.healthcare.dto.PatientDTO;
+import com.healthcare.exception.ResourceNotFoundException;
 import com.healthcare.model.Patient;
 import com.healthcare.repository.PatientRepository;
 import org.springframework.stereotype.Service;
@@ -26,7 +27,7 @@ public class PatientService {
 
     public Patient getPatientById(Long id) {
         return patientRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Patient not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Patient not found with id: " + id));
     }
 
     public Patient updatePatient(Long id, Patient updatedPatient) {
@@ -42,6 +43,13 @@ public class PatientService {
         return patientRepository.save(existing);
     }
 
+    public void deletePatient(Long id) {
+        if (!patientRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Patient not found with id: " + id);
+        }
+        patientRepository.deleteById(id);
+    }
+
     public Patient mapDtoToEntity(PatientDTO dto) {
         Patient patient = new Patient();
         patient.setName(dto.getName());
@@ -51,10 +59,5 @@ public class PatientService {
         patient.setPhoneNumber(dto.getPhoneNumber());
         patient.setMedicalHistory(dto.getMedicalHistory());
         return patient;
-    }
-
-
-    public void deletePatient(Long id) {
-        patientRepository.deleteById(id);
     }
 }

@@ -22,8 +22,8 @@ public class PatientController {
     @PostMapping
     public ResponseEntity<Patient> createPatient(@RequestBody PatientDTO dto) {
         Patient patient = patientService.mapDtoToEntity(dto);
-        Patient savedPatient = patientService.createPatient(patient);
-        return new ResponseEntity<>(savedPatient, HttpStatus.CREATED);
+        Patient saved = patientService.createPatient(patient);
+        return new ResponseEntity<>(saved, HttpStatus.CREATED);
     }
 
     @GetMapping
@@ -37,9 +37,7 @@ public class PatientController {
     }
 
     @PutMapping("/{id}")
-    public Patient updatePatient(
-            @PathVariable Long id,
-            @RequestBody Patient patient) {
+    public Patient updatePatient(@PathVariable Long id, @RequestBody Patient patient) {
         return patientService.updatePatient(id, patient);
     }
 

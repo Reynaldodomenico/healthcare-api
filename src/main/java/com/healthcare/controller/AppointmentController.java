@@ -1,8 +1,10 @@
 package com.healthcare.controller;
 
-import com.healthcare.model.Appointment;
+import com.healthcare.dto.AppointmentRequestDTO;
+import com.healthcare.dto.AppointmentResponseDTO;
 import com.healthcare.service.AppointmentService;
-import org.springframework.http.ResponseEntity;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,33 +20,23 @@ public class AppointmentController {
     }
 
     @PostMapping
-    public Appointment createAppointment(@RequestBody Appointment appointment) {
-        return appointmentService.createAppointment(appointment);
+    @ResponseStatus(HttpStatus.CREATED)
+    public AppointmentResponseDTO createAppointment(@RequestBody @Valid AppointmentRequestDTO dto) {
+        return appointmentService.createAppointment(dto);
     }
 
     @GetMapping
-    public List<Appointment> getAllAppointments() {
+    public List<AppointmentResponseDTO> getAllAppointments() {
         return appointmentService.getAllAppointments();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Appointment> getAppointmentById(@PathVariable Long id) {
-        return appointmentService.getAppointmentById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @GetMapping("/doctor/{doctorId}")
-    public List<Appointment> getAppointmentsByDoctor(@PathVariable Long doctorId) {
-        return appointmentService.getAppointmentsByDoctorId(doctorId);
-    }
-
-    @PutMapping("/{id}")
-    public Appointment updateAppointment(@PathVariable Long id, @RequestBody Appointment appointment) {
-        return appointmentService.updateAppointment(id, appointment);
+    public AppointmentResponseDTO getAppointmentById(@PathVariable Long id) {
+        return appointmentService.getAppointmentById(id);
     }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteAppointment(@PathVariable Long id) {
         appointmentService.deleteAppointment(id);
     }
